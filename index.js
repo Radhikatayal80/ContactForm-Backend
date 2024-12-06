@@ -5,8 +5,8 @@ const cors = require("cors");
 const app = express();
 app.use(express.json());
 app.use(cors());
-// MongoDB connection
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+
+mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log("MongoDB connected successfully");
   })
@@ -14,7 +14,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
     console.log("MongoDB connection error:", err.message);
   });
 
-// Define the Form schema and model
+
 const formSchema = new mongoose.Schema({
   name: String,
   email: String,
@@ -32,7 +32,7 @@ const formSchema = new mongoose.Schema({
 
 const Form = mongoose.model("Form", formSchema);
 
-// POST: Save data to MongoDB (Create)
+
 app.post("/submit-form", async (req, res) => {
   try {
     console.log("Form data received:", req.body);
@@ -45,7 +45,7 @@ app.post("/submit-form", async (req, res) => {
   }
 });
 
-// GET: Fetch all form data from MongoDB (Read)
+
 app.get("/forms", async (req, res) => {
   try {
     const forms = await Form.find();
@@ -56,7 +56,7 @@ app.get("/forms", async (req, res) => {
   }
 });
 
-// PUT: Update form data by ID (Update)
+
 app.put("/update-form/:id", async (req, res) => {
   try {
     const updatedForm = await Form.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -70,7 +70,7 @@ app.put("/update-form/:id", async (req, res) => {
   }
 });
 
-// DELETE: Delete form data by ID (Delete)
+
 app.delete("/delete-form/:id", async (req, res) => {
   try {
     const deletedForm = await Form.findByIdAndDelete(req.params.id);
@@ -84,7 +84,7 @@ app.delete("/delete-form/:id", async (req, res) => {
   }
 });
 
-// Start the server
+
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
